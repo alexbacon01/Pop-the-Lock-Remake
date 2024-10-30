@@ -2,11 +2,15 @@
 #include "Lock.hpp"
 #include "Line.hpp"
 
+#include "Target.hpp"
+
 Lock l = Lock(glm::vec2{ 1,1 }, 0.5, ofColor(0, 0, 0), ofColor(0, 0, 0), 10);
-Line line = Line(glm::vec2{ 1,1 }, ofColor(255,255, 255), 10.0, 10.0, 10.0, 0);
+Line line = Line(glm::vec2{ 1,1 }, ofColor(240,55, 20), 10.0, 10.0, 10.0, 0);
+Target target = Target(glm::vec2{ 1,1 }, 50, ofColor(225, 205, 9), 10);
+
 float diam;
 glm::vec2 pos;
-float angle = 90;
+float lineAngle = 90;
 bool rotating = true;
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -23,21 +27,26 @@ void ofApp::setup() {
 	l.outerColor = c2;
 	l.resolution = res;
 
-	//Set up the line'
+	//Set up the line
 	float lineOffset = (diam / 3) / 2;
-
 	line.width = diam / 1.6 - diam / 3;
 	line.height = diam / 10;
 	line.roundness = 20;
+
+	//set up target
+	float targetAngle = ofRandom(360);
+	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(targetAngle), diam / 1.5 * sin(targetAngle) };
+	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(targetAngle), diam / 3 * sin(targetAngle) };
+	target.pos = ((pointOfBig + pointOfLil) / 2);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	if (rotating) {
-		angle = line.rotate();
+		lineAngle = line.rotate();
 	} 
-	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(angle), diam / 1.5 * sin(angle) };
-	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(angle), diam / 3 * sin(angle) };
+	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(lineAngle), diam / 1.5 * sin(lineAngle) };
+	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(lineAngle), diam / 3 * sin(lineAngle) };
 	line.pos = ((pointOfBig + pointOfLil) / 2);
 }
 
@@ -45,6 +54,7 @@ void ofApp::update() {
 void ofApp::draw() {
 	l.draw();
 	line.draw();
+	target.draw();
 }
 
 //--------------------------------------------------------------

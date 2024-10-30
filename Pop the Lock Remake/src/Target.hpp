@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Line.hpp"
 
 class Target {
 
@@ -13,5 +13,6 @@ public:
 
 	int resolution;
 	void draw();
+	bool checkForHit(Line line);
 
 };

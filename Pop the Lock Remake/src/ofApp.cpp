@@ -11,6 +11,7 @@ Target target = Target(glm::vec2{ 1,1 }, 50, ofColor(225, 205, 9), 10);
 float diam;
 glm::vec2 pos;
 float lineAngle = 90;
+float targetAngle = ofRandom(360);
 bool rotating = true;
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -32,12 +33,6 @@ void ofApp::setup() {
 	line.width = diam / 1.6 - diam / 3;
 	line.height = diam / 10;
 	line.roundness = 20;
-
-	//set up target
-	float targetAngle = ofRandom(360);
-	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(targetAngle), diam / 1.5 * sin(targetAngle) };
-	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(targetAngle), diam / 3 * sin(targetAngle) };
-	target.pos = ((pointOfBig + pointOfLil) / 2);
 }
 
 //--------------------------------------------------------------
@@ -48,6 +43,10 @@ void ofApp::update() {
 	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(lineAngle), diam / 1.5 * sin(lineAngle) };
 	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(lineAngle), diam / 3 * sin(lineAngle) };
 	line.pos = ((pointOfBig + pointOfLil) / 2);
+
+	glm::vec2 pointOfBigT = pos + glm::vec2{ diam / 1.5 * cos(targetAngle), diam / 1.5 * sin(targetAngle) };
+	glm::vec2 pointOfLilT = pos + glm::vec2{ diam / 3 * cos(targetAngle), diam / 3 * sin(targetAngle) };
+	target.pos = ((pointOfBigT + pointOfLilT) / 2);
 }
 
 //--------------------------------------------------------------
@@ -62,6 +61,9 @@ void ofApp::keyPressed(int key) {
 	if (key == 32) {
 		if (rotating) {
 			rotating = false;
+			if (target.checkForHit(line)) {
+				targetAngle = ofRandom(360);
+			}
 		}
 	}
 }

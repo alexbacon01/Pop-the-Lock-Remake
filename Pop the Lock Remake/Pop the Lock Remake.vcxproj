@@ -104,10 +104,12 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Lock.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Lock.hpp" />
     <ClInclude Include="src\ofApp.h" />
   </ItemGroup>
   <ItemGroup>

@@ -14,5 +14,6 @@ public:
 	float roundness;
 	float angle;
 	void draw();
+	float rotate();
 
 };

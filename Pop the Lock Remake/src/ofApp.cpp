@@ -4,12 +4,16 @@
 
 Lock l = Lock(glm::vec2{ 1,1 }, 0.5, ofColor(0, 0, 0), ofColor(0, 0, 0), 10);
 Line line = Line(glm::vec2{ 1,1 }, ofColor(255,255, 255), 10.0, 10.0, 10.0, 0);
+float diam;
+glm::vec2 pos;
+float angle = 90;
+bool rotating = true;
 //--------------------------------------------------------------
 void ofApp::setup() {
 
 	//Set up the lock
-	glm::vec2 pos = { ofGetWindowWidth() / 2.0, ofGetWindowHeight() / 2.0 };
-	float diam = ofGetWindowWidth() / 3.0;
+	pos = { ofGetWindowWidth() / 2.0, ofGetWindowHeight() / 2.0 };
+	diam = ofGetWindowWidth() / 3.0;
 	int res = 50;
 	ofColor c1 = ofColor(2, 10, 30);
 	ofColor c2 = ofColor(43, 81, 175);
@@ -21,19 +25,20 @@ void ofApp::setup() {
 
 	//Set up the line'
 	float lineOffset = (diam / 3) / 2;
-	float angle = ofDegToRad(90);
-	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(angle), diam / 1.5 * sin(angle) };
-	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(angle), diam / 3 * sin(angle) };
-	line.angle = angle;
-	line.pos = (pointOfBig + pointOfLil) / 2;
-	line.width = diam / 1.5 - diam / 3;
+
+	line.width = diam / 1.6 - diam / 3;
 	line.height = diam / 10;
 	line.roundness = 20;
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-
+	if (rotating) {
+		angle = line.rotate();
+	} 
+	glm::vec2 pointOfBig = pos + glm::vec2{ diam / 1.5 * cos(angle), diam / 1.5 * sin(angle) };
+	glm::vec2 pointOfLil = pos + glm::vec2{ diam / 3 * cos(angle), diam / 3 * sin(angle) };
+	line.pos = ((pointOfBig + pointOfLil) / 2);
 }
 
 //--------------------------------------------------------------
@@ -44,7 +49,11 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-
+	if (key == 32) {
+		if (rotating) {
+			rotating = false;
+		}
+	}
 }
 
 //--------------------------------------------------------------

@@ -16,6 +16,11 @@ void Line::draw() {
 	ofSetColor(color);
 	ofTranslate(pos);
 	ofRotateRad(angle);
-	ofDrawRectRounded(glm::vec2{ 0,0 }, width, height, roundness);
+	ofDrawRectRounded(glm::vec2{ -width/2, 0 }, width, height, roundness);
 	ofPopMatrix();
+}
+
+float Line::rotate() {
+	angle += 0.01;
+	return angle;
 }

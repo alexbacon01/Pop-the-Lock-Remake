@@ -15,7 +15,7 @@ void Line::draw() {
 	ofPushMatrix();
 	ofSetColor(color);
 	ofTranslate(pos);
-	ofRotate(angle);
+	ofRotateRad(angle);
 	ofDrawRectRounded(glm::vec2{ 0,0 }, width, height, roundness);
 	ofPopMatrix();
 }

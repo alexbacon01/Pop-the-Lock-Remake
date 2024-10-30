@@ -1,8 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Game.hpp"
 
 class ofApp : public ofBaseApp{
+	private:
+	Game game;
+	bool gameRunning;
 
 	public:
 		void setup();

@@ -34,13 +34,14 @@
 		target.pos = getPos(targetAngle);
 	}
 
-	void Game::stopLine() {
+	bool Game::stopLine() {
 		if (rotating) {
 			rotating = false;
 			if (target.checkForHit(line)) {
 				targetAngle = ofRandom(360);
 			}
 		}
+		return target.checkForHit(line);
 	}
 
 	glm::vec2 Game::getPos(float angle) {

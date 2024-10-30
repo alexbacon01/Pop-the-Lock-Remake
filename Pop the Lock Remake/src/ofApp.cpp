@@ -1,26 +1,36 @@
 #include "ofApp.h"
-#include "Game.hpp"
 
-Game game;
 //--------------------------------------------------------------
 void ofApp::setup() {
-	game.setup();
+	gameRunning = true;
+		game.setup();
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	game.update();
+	if (gameRunning) {
+		game.update();
+	}
+
+	std::cout << gameRunning;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	game.draw();
+
+		game.draw();
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	if (key == 32) { //space bar
-		game.stopLine();
+	if (gameRunning) {
+		if (key == 32) { //space bar
+			if (!game.stopLine()) {
+				gameRunning = false;
+			}
+		}
 	}
 }
 

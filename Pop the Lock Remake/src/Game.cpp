@@ -32,15 +32,16 @@
 		}
 		line.pos = getPos(lineAngle);
 		target.pos = getPos(targetAngle);
+		std::cout << " Line speed: " << line.speed;
 	}
 
 	bool Game::stopLine() {
-		if (rotating) {
-			rotating = false;
+	
 			if (target.checkForHit(line)) {
 				targetAngle = ofRandom(360);
+				line.reverse();
 			}
-		}
+
 		return target.checkForHit(line);
 	}
 

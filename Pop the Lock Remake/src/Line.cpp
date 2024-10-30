@@ -21,6 +21,16 @@ void Line::draw() {
 }
 
 float Line::rotate() {
-	angle += 0.01;
+	angle += speed;
 	return angle;
+}
+
+void Line::reverse() {
+	if (speed > 0) {
+		speed += 0.005;
+	}
+	else {
+		speed -= 0.005;
+	}
+	speed *= -1;
 }

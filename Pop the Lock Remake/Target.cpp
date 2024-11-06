@@ -23,8 +23,8 @@ bool Target::checkForHit(Line line) {
 
 	float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
 
-	std::cout << (distance <= diam / 2.0);
+	std::cout << (distance <= diam );
 
-	return distance <= diam / 2.0;
+	return distance <= diam;
 	
 }

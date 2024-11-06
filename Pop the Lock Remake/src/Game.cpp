@@ -30,6 +30,9 @@
 		line.width = diam / 1.6 - diam / 3;
 		line.height = diam / 10;
 		line.roundness = 20;
+		
+		//set up the target
+		minTargetDist = 50;
 	}
 
 	void Game::update() {
@@ -44,7 +47,7 @@
 	
 			if (target.checkForHit(line)) {
 				score++;
-				targetAngle = ofRandom(360);
+				targetAngle = getNewTargetAngle(targetAngle);
 				line.reverse();
 				std::cout << " score: " << score;
 			}
@@ -56,4 +59,10 @@
 		glm::vec2 pointOfBigT = pos + glm::vec2{ diam / 1.5 * cos(angle), diam / 1.5 * sin(angle) };
 		glm::vec2 pointOfLilT = pos + glm::vec2{ diam / 3 * cos(angle), diam / 3 * sin(angle) };
 		return ((pointOfBigT + pointOfLilT) / 2);
+	}
+
+	float Game::getNewTargetAngle(float last) {
+		float newAngle = ofRandom(last + minTargetDist, 360);
+		std::cout << "LAST: " << last << " NEW: " << newAngle;
+		return newAngle;
 	}

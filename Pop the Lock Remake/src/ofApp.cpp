@@ -11,8 +11,6 @@ void ofApp::update() {
 	if (gameRunning) {
 		game.update();
 	}
-
-	std::cout << gameRunning;
 }
 
 //--------------------------------------------------------------

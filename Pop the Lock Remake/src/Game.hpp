@@ -17,10 +17,12 @@ class Game {
 		bool rotating = true;
 		ofTrueTypeFont myFont;
 		glm::vec2 Game::getPos(float angle);
+		float minTargetDist; //minimum distance for the next targets location from the last one.
 	public:
 		void draw();
 		void setup();
 		void update();
 		bool stopLine();
+		float getNewTargetAngle(float last);
 		int score;
 };

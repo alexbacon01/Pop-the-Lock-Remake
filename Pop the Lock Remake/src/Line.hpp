@@ -15,7 +15,7 @@ public:
 	float angle;
 	void draw();
 	float rotate();
-	float speed = 0.01;
+	float speed = 0.02;
 	void reverse();
 
 };

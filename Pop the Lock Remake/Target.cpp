@@ -14,7 +14,6 @@ void Target::draw() {
 	// circle
 	ofSetColor(color);
 	ofDrawCircle(pos.x, pos.y, diam / 1.5);
-
 }
 
 bool Target::checkForHit(Line line) {
@@ -23,8 +22,5 @@ bool Target::checkForHit(Line line) {
 
 	float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
 
-	std::cout << (distance <= diam );
-
-	return distance <= diam;
-	
+	return distance <= diam;	
 }

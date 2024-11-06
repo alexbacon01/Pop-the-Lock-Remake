@@ -27,10 +27,10 @@ float Line::rotate() {
 
 void Line::reverse() {
 	if (speed > 0) {
-		speed += 0.005;
+		speed += 0.001;
 	}
 	else {
-		speed -= 0.005;
+		speed -= 0.001;
 	}
 	speed *= -1;
 }

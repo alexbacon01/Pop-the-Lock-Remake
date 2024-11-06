@@ -15,11 +15,12 @@ class Game {
 		float lineAngle = 90;
 		float targetAngle = ofRandom(360);
 		bool rotating = true;
-
+		ofTrueTypeFont myFont;
 		glm::vec2 Game::getPos(float angle);
 	public:
 		void draw();
 		void setup();
 		void update();
 		bool stopLine();
+		int score;
 };

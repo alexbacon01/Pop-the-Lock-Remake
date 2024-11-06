@@ -4,9 +4,15 @@
 		l.draw();
 		line.draw();
 		target.draw();
+		ofColor(255, 255, 255);
+		std::string scoreString = to_string(score);
+		myFont.drawString(scoreString, l.pos.x - (myFont.stringWidth(scoreString)/2), l.pos.y + (myFont.stringHeight(scoreString)/2));
 	}
 
 	void Game::setup() {
+		score = 0;
+		myFont.load("BRLNSR.TTF", 100);
+
 		//Set up the lock
 		pos = { ofGetWindowWidth() / 2.0, ofGetWindowHeight() / 2.0 };
 		diam = ofGetWindowWidth() / 3.0;
@@ -32,15 +38,15 @@
 		}
 		line.pos = getPos(lineAngle);
 		target.pos = getPos(targetAngle);
-		std::cout << " Line speed: " << line.speed;
 	}
 
 	bool Game::stopLine() {
 	
 			if (target.checkForHit(line)) {
-				std::cout << "hit target";
+				score++;
 				targetAngle = ofRandom(360);
 				line.reverse();
+				std::cout << " score: " << score;
 			}
 
 		return target.checkForHit(line);

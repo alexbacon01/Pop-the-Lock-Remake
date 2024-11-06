@@ -38,6 +38,7 @@
 	bool Game::stopLine() {
 	
 			if (target.checkForHit(line)) {
+				std::cout << "hit target";
 				targetAngle = ofRandom(360);
 				line.reverse();
 			}

@@ -29,8 +29,6 @@ void ofApp::keyPressed(int key) {
 		if (key == 32) { //space bar
 			if (!game.stopLine()) {
 				gameRunning = false;
-			} else {
-
 			}
 		}
 	}

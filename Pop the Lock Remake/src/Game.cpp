@@ -32,7 +32,7 @@
 		line.roundness = 20;
 		
 		//set up the target
-		minTargetDist = 50;
+		minTargetDist = 175;
 	}
 
 	void Game::update() {
@@ -49,7 +49,6 @@
 				score++;
 				targetAngle = getNewTargetAngle(targetAngle);
 				line.reverse();
-				std::cout << " score: " << score;
 			}
 
 		return target.checkForHit(line);
@@ -62,7 +61,39 @@
 	}
 
 	float Game::getNewTargetAngle(float last) {
-		float newAngle = ofRandom(last + minTargetDist, 360);
-		std::cout << "LAST: " << last << " NEW: " << newAngle;
+		float newAngle;
+		bool validAngle = false;
+		int maxAttempts = 100;
+		bool isClockwise = line.speed < 0;
+
+		for (int i = 0; i < maxAttempts; i++) {
+			// Generate a random angle between 0 and 360 degrees
+			newAngle = ofRandom(0, 360);
+
+			// Calculate angle difference, accounting for wrap-around at 360
+			float angleDifference = newAngle - last;
+			if (isClockwise) {
+				// Ensure angleDifference is positive in the clockwise direction
+				if (angleDifference < 0) angleDifference += 360;
+			}
+			else {
+				// Ensure angleDifference is positive in the counterclockwise direction
+				if (angleDifference > 0) angleDifference -= 360;
+			}
+			angleDifference = abs(angleDifference);
+
+			// Check if angleDifference meets the minimum distance
+			if (angleDifference >= minTargetDist) {
+				validAngle = true;
+				break;
+			}
+		}
+
+		// Fallback if no valid angle found
+		if (!validAngle) {
+			newAngle = fmod(last + (isClockwise ? minTargetDist : -minTargetDist), 360);
+		}
+
+		std::cout << "Last Angle: " << last << " New Angle: " << newAngle << " Direction: " << (isClockwise ? "Clockwise" : "Counterclockwise") << std::endl;
 		return newAngle;
 	}

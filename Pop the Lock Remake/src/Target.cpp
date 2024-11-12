@@ -22,5 +22,5 @@ bool Target::checkForHit(Line line) {
 
 	float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
 
-	return distance <= diam;	
+	return distance <= diam;
 }

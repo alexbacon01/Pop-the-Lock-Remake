@@ -16,4 +16,6 @@ public:
 	void draw();
 	bool checkForHit(Line line);
 
+	bool checkForMiss(Line line);
+
 };

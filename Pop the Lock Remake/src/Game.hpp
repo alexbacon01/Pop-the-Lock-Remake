@@ -25,5 +25,7 @@ class Game {
 		void update();
 		bool stopLine();
 		float getNewTargetAngle(float last);
+		void restart();
 		int score;
+		bool keyPressed;
 };

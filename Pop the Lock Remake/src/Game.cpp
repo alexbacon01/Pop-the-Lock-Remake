@@ -41,6 +41,12 @@
 		}
 		line.pos = getPos(lineAngle);
 		target.pos = getPos(targetAngle);
+		
+		if (target.checkForMiss(line)) {
+			std::cout << " MISS ";
+			restart();
+		}
+		
 	}
 
 	bool Game::stopLine() {
@@ -96,4 +102,8 @@
 
 		std::cout << "Last Angle: " << last << " New Angle: " << newAngle << " Direction: " << (isClockwise ? "Clockwise" : "Counterclockwise") << std::endl;
 		return newAngle;
+	}
+
+	void Game::restart(){
+		score = 0;
 	}

@@ -5,8 +5,8 @@
 		line.draw();
 		target.draw();
 		ofColor(255, 255, 255);
-		std::string scoreString = to_string(score);
-		myFont.drawString(scoreString, l.pos.x - (myFont.stringWidth(scoreString)/2), l.pos.y + (myFont.stringHeight(scoreString)/2));
+		std::string string = to_string(startNumber - score);
+		myFont.drawString(string, l.pos.x - (myFont.stringWidth(string)/2), l.pos.y + (myFont.stringHeight(string)/2));
 	}
 
 	void Game::setup() {

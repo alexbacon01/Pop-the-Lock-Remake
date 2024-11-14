@@ -14,6 +14,7 @@ public:
 
 	int resolution;
 	void draw();
+	void setup();
 	bool checkForHit(Line line);
 
 	bool checkForMiss(Line line);
@@ -27,5 +28,6 @@ public:
 	std::vector<float> explosionDistances;
 	float maxDistance = 50.0f; // Maximum distance lines will travel
 	float lineSpeed = 4.0f;     // Speed of outward movement
+	std::vector<ofSoundPlayer> sounds;
 
 };

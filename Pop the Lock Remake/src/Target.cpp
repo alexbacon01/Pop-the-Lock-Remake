@@ -35,7 +35,14 @@ void Target::draw() {
         ofSetLineWidth(1); // Reset line width to default after drawing
     }
 }
-
+void Target::setup() {
+    int numSounds = 5;
+    sounds.resize(numSounds);
+    for (int i = 1; i <= numSounds; i++) {
+        std::string fileName = "Pop" + std::to_string(i) + ".mp3";
+        sounds[i-1].load(fileName);
+    }
+}
 bool Target::checkForHit(Line line) {
 	float closestX = glm::clamp(pos.x, line.pos.x, line.pos.x + line.width);
 	float closestY = glm::clamp(pos.y, line.pos.y, line.pos.y + line.height);
@@ -88,6 +95,8 @@ void Target::startExplosion() {
         explosionDirections.push_back(direction);
         explosionDistances.push_back(0.0f); // Start at 0 distance for each line
     }
+    int soundIndex = ofRandom(0, sounds.size());
+    sounds[soundIndex].play();
     isHit = true;
 }
 

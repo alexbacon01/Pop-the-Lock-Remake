@@ -39,6 +39,7 @@
 		
 		//set up the target
 		minTargetDist = 175;
+		target.setup();
 	}
 
 	void Game::update() {

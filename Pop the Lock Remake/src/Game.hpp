@@ -35,5 +35,6 @@ class Game {
 		int score;
 		bool keyPressed;
 		game_state gameState = startMenu;
+		ofSoundPlayer missSound;
 		ofSoundPlayer backgroundMusic;
 };

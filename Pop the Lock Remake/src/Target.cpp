@@ -1,14 +1,25 @@
 #include <ofMain.h>
 #include "Target.hpp"
 #include "Line.hpp"
-Target::Target(glm::vec2 pos, float diam, ofColor color, int resolution)
-	:pos{ pos }, diam{ diam }, color{ color }, resolution{
-	resolution
-	}
-{
 
+/**
+ * @brief Constructs a Target with specified position, diameter, color, and resolution.
+ *
+ * @param pos The position of the target.
+ * @param diam The diameter of the target.
+ * @param color The color of the target.
+ * @param resolution The circle resolution (used for smoothness of drawing).
+ */
+Target::Target(glm::vec2 pos, float diam, ofColor color, int resolution)
+    : pos{ pos }, diam{ diam }, color{ color }, resolution{ resolution } {
 }
 
+/**
+ * @brief Draws the target and, if hit, the explosion effect.
+ *
+ * Draws a circle to represent the target. If the target is hit, it also draws
+ * explosion lines radiating outward from the center of the target.
+ */
 void Target::draw() {
     ofSetCircleResolution(50);
 
@@ -35,23 +46,49 @@ void Target::draw() {
         ofSetLineWidth(1); // Reset line width to default after drawing
     }
 }
+
+/**
+ * @brief Sets up audio resources for the target.
+ *
+ * Loads multiple sound files representing different "pop" effects for when the target
+ * is hit, adding them to a vector of sounds.
+ */
 void Target::setup() {
     int numSounds = 5;
     sounds.resize(numSounds);
     for (int i = 1; i <= numSounds; i++) {
         std::string fileName = "Pop" + std::to_string(i) + ".mp3";
-        sounds[i-1].load(fileName);
+        sounds[i - 1].load(fileName);
     }
 }
+
+/**
+ * @brief Checks if the line hits the target.
+ *
+ * Calculates the closest point on the line to the target center and checks if
+ * this point falls within the target's diameter, indicating a hit.
+ *
+ * @param line The Line object to check for collision.
+ * @return bool True if the line hits the target; otherwise, false.
+ */
 bool Target::checkForHit(Line line) {
-	float closestX = glm::clamp(pos.x, line.pos.x, line.pos.x + line.width);
-	float closestY = glm::clamp(pos.y, line.pos.y, line.pos.y + line.height);
+    float closestX = glm::clamp(pos.x, line.pos.x, line.pos.x + line.width);
+    float closestY = glm::clamp(pos.y, line.pos.y, line.pos.y + line.height);
 
-	float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
+    float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
 
-	return distance <= diam;
+    return distance <= diam;
 }
 
+/**
+ * @brief Checks if the line missed the target while passing near it.
+ *
+ * This function calculates the line's proximity to the target and detects if the line
+ * has passed the target based on their angles relative to the center of the circle.
+ *
+ * @param line The Line object to check for a miss.
+ * @return bool True if the line passed near but missed the target; otherwise, false.
+ */
 bool Target::checkForMiss(Line line) {
     // Set a threshold for proximity to the target center
     float proximityThreshold = diam / 2.0f;
@@ -85,6 +122,12 @@ bool Target::checkForMiss(Line line) {
     return isCloseToTarget && passedTarget;
 }
 
+/**
+ * @brief Starts the explosion effect by initializing directions and distances for explosion lines.
+ *
+ * Generates multiple lines radiating outward from the target center, each with a unique direction
+ * to simulate an explosion effect. A random "pop" sound is played when the effect starts.
+ */
 void Target::startExplosion() {
     int numLines = 20;
     explosionDirections.clear();
@@ -100,6 +143,12 @@ void Target::startExplosion() {
     isHit = true;
 }
 
+/**
+ * @brief Updates the explosion effect, increasing the distance of each line.
+ *
+ * This function updates the distances for each explosion line based on the line speed.
+ * This creates the effect of lines radiating outward from the target center.
+ */
 void Target::updateExplosion() {
     if (isHit) {
         for (size_t i = 0; i < explosionDirections.size(); i++) {
@@ -108,6 +157,3 @@ void Target::updateExplosion() {
         }
     }
 }
-
-
-

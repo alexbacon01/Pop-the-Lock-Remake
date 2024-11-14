@@ -23,6 +23,7 @@ class Game {
 		ofColor backgroundColor = ofColor(0, 0, 0);
 		Target explodingTarget = target;
 		bool isExploding = false;
+
 	public:
 		void draw();
 		void setup();
@@ -34,4 +35,5 @@ class Game {
 		int score;
 		bool keyPressed;
 		game_state gameState = startMenu;
+		ofSoundPlayer backgroundMusic;
 };

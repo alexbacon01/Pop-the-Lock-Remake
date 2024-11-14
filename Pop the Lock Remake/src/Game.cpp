@@ -40,6 +40,8 @@
 		//set up the target
 		minTargetDist = 175;
 		target.setup();
+
+		backgroundMusic.load("BackgroundMusic.mp3");
 	}
 
 	void Game::update() {
@@ -51,6 +53,7 @@
 		
 		if (target.checkForMiss(line)) {
 			std::cout << " MISS ";
+
 		}
 		if (isExploding) {
 			explodingTarget.updateExplosion();
@@ -59,6 +62,13 @@
 				isExploding = false;
 			}
 		}
+
+
+		if (!backgroundMusic.getIsPlaying()) {
+			backgroundMusic.play();
+		}
+	
+
 	}
 
 	bool Game::stopLine() {

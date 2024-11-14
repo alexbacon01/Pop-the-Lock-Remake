@@ -72,12 +72,27 @@ void Target::setup() {
  * @return bool True if the line hits the target; otherwise, false.
  */
 bool Target::checkForHit(Line line) {
-    float closestX = glm::clamp(pos.x, line.pos.x, line.pos.x + line.width);
-    float closestY = glm::clamp(pos.y, line.pos.y, line.pos.y + line.height);
+    // Get the game window center (which is the rotation center)
+    glm::vec2 center = glm::vec2(ofGetWidth() / 2, ofGetHeight() / 2);
 
-    float distance = sqrt((pos.x - closestX) * (pos.x - closestX) + (pos.y - closestY) * (pos.y - closestY));
+    // Convert angles to the same coordinate space (0 to 2PI)
+    float lineAngle = fmod(line.angle + TWO_PI, TWO_PI);
 
-    return distance <= diam;
+    // Calculate target angle relative to center
+    float targetAngle = atan2(pos.y - center.y, pos.x - center.x);
+    if (targetAngle < 0) targetAngle += TWO_PI;
+
+    // Calculate the absolute difference between angles
+    float angleDiff = abs(lineAngle - targetAngle);
+    if (angleDiff > PI) {
+        angleDiff = TWO_PI - angleDiff;
+    }
+
+    // Define hit tolerance in radians (adjust this value as needed)
+    float tolerance = PI / 12.0f; // 15 degrees
+
+    // Check if the line's angle is close enough to the target's angle
+    return angleDiff <= tolerance;
 }
 
 /**
@@ -90,36 +105,65 @@ bool Target::checkForHit(Line line) {
  * @return bool True if the line passed near but missed the target; otherwise, false.
  */
 bool Target::checkForMiss(Line line) {
-    // Set a threshold for proximity to the target center
-    float proximityThreshold = diam / 2.0f;
+    // Get the center of rotation (game window center)
+    glm::vec2 center = glm::vec2(ofGetWidth() / 2, ofGetHeight() / 2);
 
-    // Calculate distance from line's current position to target's position
-    float currentDistance = glm::distance(line.pos, pos);
-    bool isCloseToTarget = currentDistance <= proximityThreshold;
+    // Get the current line angle (0 to 2PI)
+    float lineAngle = fmod(line.angle + TWO_PI, TWO_PI);
 
-    // Get angles for line and target relative to the center
-    float lineAngle = atan2(line.pos.y - pos.y, line.pos.x - pos.x);
-    float targetAngle = atan2(pos.y - pos.y, pos.x - pos.x);
-
-    // Normalize angles to [0, 2*PI]
-    if (lineAngle < 0) lineAngle += TWO_PI;
+    // Calculate target angle relative to center (0 to 2PI)
+    float targetAngle = atan2(pos.y - center.y, pos.x - center.x);
     if (targetAngle < 0) targetAngle += TWO_PI;
 
-    // Calculate the angular difference based on direction
-    bool isClockwise = line.speed > 0;
+    // Store the previous line angle
+    static float prevLineAngle = lineAngle;
+
+    // Define the miss detection zone (slightly larger than hit tolerance)
+    float missZone = PI / 10.0f; // 18 degrees, adjust as needed
+
+    // Calculate angular differences
+    float angleDiff = abs(lineAngle - targetAngle);
+    if (angleDiff > PI) {
+        angleDiff = TWO_PI - angleDiff;
+    }
+
+    // Determine if we just passed the target
     bool passedTarget = false;
+    if (line.speed > 0) { // Clockwise rotation
+        float prevAngleDiff = targetAngle - prevLineAngle;
+        float currAngleDiff = targetAngle - lineAngle;
 
-    if (isClockwise) {
-        // For clockwise, the line misses if it moves from an angle less than targetAngle to greater than targetAngle
-        passedTarget = lineAngle > targetAngle && (lineAngle - targetAngle) < PI;
+        if (prevAngleDiff < 0) prevAngleDiff += TWO_PI;
+        if (currAngleDiff < 0) currAngleDiff += TWO_PI;
+
+        // Check if we crossed over the target angle
+        if (prevAngleDiff < PI && currAngleDiff > PI) {
+            passedTarget = true;
+        }
+        // Handle wrap-around at 2PI
+        if (prevLineAngle > lineAngle && abs(prevLineAngle - lineAngle) > PI) {
+            if (targetAngle > min(prevLineAngle, lineAngle) &&
+                targetAngle < max(prevLineAngle, lineAngle)) {
+                passedTarget = true;
+            }
+        }
     }
-    else {
-        // For counterclockwise, the line misses if it moves from an angle greater than targetAngle to less than targetAngle
-        passedTarget = lineAngle < targetAngle && (targetAngle - lineAngle) < PI;
+    else { // Counter-clockwise rotation
+        // Check if we crossed over the target angle
+        if (prevLineAngle > targetAngle && lineAngle < targetAngle) {
+            passedTarget = true;
+        }
+        // Handle wrap-around at 0
+        if (prevLineAngle < missZone && lineAngle >(TWO_PI - missZone)) {
+            passedTarget = true;
+        }
     }
 
-    // Register a miss only if the line is close to the target and has passed it
-    return isCloseToTarget && passedTarget;
+    // Update previous angle for next frame
+    prevLineAngle = lineAngle;
+
+    // Return true if we passed the target and were close enough to it
+    return passedTarget && (angleDiff <= missZone);
 }
 
 /**

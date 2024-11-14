@@ -8,6 +8,9 @@
 		ofColor(255, 255, 255);
 		std::string string = to_string(startNumber - score);
 		mainFont.drawString(string, l.pos.x - (mainFont.stringWidth(string)/2), l.pos.y + (mainFont.stringHeight(string)/2));
+		if (isExploding) {
+			explodingTarget.draw();
+		}
 	}
 
 	void Game::setup() {
@@ -48,12 +51,23 @@
 		if (target.checkForMiss(line)) {
 			std::cout << " MISS ";
 		}
-		
+		if (isExploding) {
+			explodingTarget.updateExplosion();
+			// Optionally, end the explosion effect when max distance is reached
+			if (explodingTarget.explosionDistances[0] >= explodingTarget.maxDistance) {
+				isExploding = false;
+			}
+		}
 	}
 
 	bool Game::stopLine() {
 	
 			if (target.checkForHit(line)) {
+				// Set up the explosion effect on the "exploding" target
+				explodingTarget = target;
+				explodingTarget.isHit = true;
+				explodingTarget.startExplosion();
+				isExploding = true;
 				score++;
 				targetAngle = getNewTargetAngle(targetAngle);
 				line.reverse();

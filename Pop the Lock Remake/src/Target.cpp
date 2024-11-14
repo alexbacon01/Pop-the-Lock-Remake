@@ -10,10 +10,30 @@ Target::Target(glm::vec2 pos, float diam, ofColor color, int resolution)
 }
 
 void Target::draw() {
-	ofSetCircleResolution(50);
-	// circle
-	ofSetColor(color);
-	ofDrawCircle(pos.x, pos.y, diam / 1.5);
+    ofSetCircleResolution(50);
+
+    // Draw target circle
+    ofSetColor(color);
+    ofDrawCircle(pos.x, pos.y, diam / 1.5);
+
+    // Draw the explosion lines if the target is hit
+    if (isHit) {
+        updateExplosion();
+
+        ofSetColor(255, 255, 255); // Explosion line color
+        ofSetLineWidth(3); // Set thickness for explosion lines
+
+        float lengthOffset = 20.0f; // Extra length to make lines longer
+        for (size_t i = 0; i < explosionDirections.size(); i++) {
+            if (explosionDistances[i] < maxDistance) {
+                // Define start and end points for a longer line
+                glm::vec2 startPoint = pos + explosionDirections[i] * (explosionDistances[i] - lineSpeed);
+                glm::vec2 endPoint = pos + explosionDirections[i] * (explosionDistances[i] + lengthOffset);
+                ofDrawLine(startPoint, endPoint);
+            }
+        }
+        ofSetLineWidth(1); // Reset line width to default after drawing
+    }
 }
 
 bool Target::checkForHit(Line line) {
@@ -57,3 +77,28 @@ bool Target::checkForMiss(Line line) {
     // Register a miss only if the line is close to the target and has passed it
     return isCloseToTarget && passedTarget;
 }
+
+void Target::startExplosion() {
+    int numLines = 20;
+    explosionDirections.clear();
+    explosionDistances.clear();
+    for (int i = 0; i < numLines; i++) {
+        float angle = ofDegToRad(i * (360.0 / numLines));
+        glm::vec2 direction = glm::vec2(cos(angle), sin(angle));
+        explosionDirections.push_back(direction);
+        explosionDistances.push_back(0.0f); // Start at 0 distance for each line
+    }
+    isHit = true;
+}
+
+void Target::updateExplosion() {
+    if (isHit) {
+        for (size_t i = 0; i < explosionDirections.size(); i++) {
+            // Increment distance based on line speed
+            explosionDistances[i] += lineSpeed;
+        }
+    }
+}
+
+
+

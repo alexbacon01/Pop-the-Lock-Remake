@@ -21,6 +21,8 @@ class Game {
 		int startNumber = 50;
 		float minTargetDist; //minimum distance for the next targets location from the last one.
 		ofColor backgroundColor = ofColor(0, 0, 0);
+		Target explodingTarget = target;
+		bool isExploding = false;
 	public:
 		void draw();
 		void setup();

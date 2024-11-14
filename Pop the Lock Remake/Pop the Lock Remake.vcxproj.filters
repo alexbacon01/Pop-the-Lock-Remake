@@ -25,6 +25,9 @@
     <ClCompile Include="src\Target.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Button.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -48,6 +51,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Button.hpp">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

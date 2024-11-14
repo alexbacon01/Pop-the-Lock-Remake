@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Button.hpp"
 
 	void Game::draw() {
 		l.draw();
@@ -6,12 +7,14 @@
 		target.draw();
 		ofColor(255, 255, 255);
 		std::string string = to_string(startNumber - score);
-		myFont.drawString(string, l.pos.x - (myFont.stringWidth(string)/2), l.pos.y + (myFont.stringHeight(string)/2));
+		mainFont.drawString(string, l.pos.x - (mainFont.stringWidth(string)/2), l.pos.y + (mainFont.stringHeight(string)/2));
 	}
 
 	void Game::setup() {
+		ofBackground(backgroundColor);
 		score = 0;
-		myFont.load("BRLNSR.TTF", 100);
+		menuFont.load("BRLNSR.TTF", 64);
+		mainFont.load("BRLNSR.TTF", 100);
 
 		//Set up the lock
 		pos = { ofGetWindowWidth() / 2.0, ofGetWindowHeight() / 2.0 };
@@ -44,7 +47,6 @@
 		
 		if (target.checkForMiss(line)) {
 			std::cout << " MISS ";
-			restart();
 		}
 		
 	}
@@ -106,4 +108,15 @@
 
 	void Game::restart(){
 		score = 0;
+	}
+
+	void Game::menu(bool mousePressed, std::string text) {
+		ofBackground(backgroundColor);
+		Button button = Button(glm::vec2{ ofGetWindowWidth() / 2, ofGetWindowHeight() / 2 }, ofGetWindowWidth() / 2, ofGetWindowHeight() / 4, ofColor(255, 255, 255));
+		button.draw("Start Game", menuFont);
+		if (button.onButton(glm::vec2(ofGetMouseX(), ofGetMouseY())) && mousePressed) {
+			gameState = running;
+		}
+		ofSetColor(255, 255, 255);
+		mainFont.drawString(text,ofGetWindowWidth()/2 - (mainFont.stringWidth(text) / 2), ofGetWindowHeight() / 6);
 	}

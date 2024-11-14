@@ -2,34 +2,40 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	gameRunning = true;
-		game.setup();
+	isMousePressed = false;
+	game.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	if (gameRunning) {
+	if (game.gameState == running) {
 		game.update();
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
+	if (game.gameState == running) {
 		game.draw();
+	} else{
+		game.menu(isMousePressed, "Pop the Lock");
+	}
+
 	
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	game.keyPressed = true;
-	if (gameRunning) {
+	if (game.gameState == running) {
 		if (key == 32) { //space bar
 			if (!game.stopLine()) {
-				gameRunning = false;
+				game.gameState = endMenu;
+				game.score = 0;
 			}
 		}
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -39,7 +45,7 @@ void ofApp::keyReleased(int key) {
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
-
+	isMousePressed = false;
 }
 
 //--------------------------------------------------------------
@@ -54,7 +60,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
-
+	isMousePressed = true;
 }
 
 //--------------------------------------------------------------

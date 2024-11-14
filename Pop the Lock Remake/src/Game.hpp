@@ -4,7 +4,7 @@
 #include "Lock.hpp"
 #include "Line.hpp"
 #include "Target.hpp"
-
+enum game_state { running, startMenu, endMenu };
 class Game {
 	private:
 		Lock l = Lock(glm::vec2{ 1,1 }, 0.5, ofColor(0, 0, 0), ofColor(0, 0, 0), 10);
@@ -15,10 +15,12 @@ class Game {
 		float lineAngle = 90;
 		float targetAngle = ofRandom(360);
 		bool rotating = true;
-		ofTrueTypeFont myFont;
+		ofTrueTypeFont mainFont;
+		ofTrueTypeFont menuFont;
 		glm::vec2 Game::getPos(float angle);
 		int startNumber = 50;
 		float minTargetDist; //minimum distance for the next targets location from the last one.
+		ofColor backgroundColor = ofColor(0, 0, 0);
 	public:
 		void draw();
 		void setup();
@@ -26,6 +28,8 @@ class Game {
 		bool stopLine();
 		float getNewTargetAngle(float last);
 		void restart();
+		void menu(bool mousePressed,std::string text);
 		int score;
 		bool keyPressed;
+		game_state gameState = startMenu;
 };

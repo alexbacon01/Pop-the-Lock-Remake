@@ -104,6 +104,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -112,6 +113,7 @@
     <ClCompile Include="src\Target.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Button.hpp" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\Line.hpp" />

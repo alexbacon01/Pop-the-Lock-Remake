@@ -7,6 +7,7 @@ class ofApp : public ofBaseApp{
 	private:
 	Game game;
 	bool gameRunning;
+	bool isMousePressed;
 	public:
 		void setup();
 		void update();
@@ -23,4 +24,6 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+
 };

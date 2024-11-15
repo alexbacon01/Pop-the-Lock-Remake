@@ -215,7 +215,7 @@ float Game::getNewTargetAngle(float last) {
 void Game::restart() {
     gameState = running;
     score = 0;
-    line.speed = line.startSpeed; \
+    line.speed = line.startSpeed; 
     minTargetDist = startMinTargetDist;
     menuMessage = "You Lost!";
 }

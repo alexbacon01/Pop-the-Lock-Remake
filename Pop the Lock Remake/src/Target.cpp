@@ -76,7 +76,7 @@ bool Target::checkForHit(Line line) {
     glm::vec2 center = glm::vec2(ofGetWidth() / 2, ofGetHeight() / 2);
 
     // Convert angles to the same coordinate space (0 to 2PI)
-    float lineAngle = fmod(line.angle + TWO_PI, TWO_PI);
+    float lineAngle = fmod(abs(line.angle) + TWO_PI, TWO_PI);
 
     // Calculate target angle relative to center
     float targetAngle = atan2(pos.y - center.y, pos.x - center.x);
@@ -109,7 +109,7 @@ bool Target::checkForMiss(Line line) {
     glm::vec2 center = glm::vec2(ofGetWidth() / 2, ofGetHeight() / 2);
 
     // Get the current line angle (0 to 2PI)
-    float lineAngle = fmod(line.angle + TWO_PI, TWO_PI);
+    float lineAngle = fmod(abs(line.angle) + TWO_PI, TWO_PI);
 
     // Calculate target angle relative to center (0 to 2PI)
     float targetAngle = atan2(pos.y - center.y, pos.x - center.x);

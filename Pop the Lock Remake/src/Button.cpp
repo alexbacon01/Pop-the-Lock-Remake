@@ -32,7 +32,6 @@ bool Button::onButton(glm::vec2 mousePos) {
         ofSetRectMode(OF_RECTMODE_CENTER);
         ofSetColor(0, 0, 255, 45);
         ofDrawRectangle(pos, width, height);
-        std::cout << "ON BUTTON";
         ofPopStyle();
         return true;
     }

@@ -18,7 +18,7 @@ class Game {
 		ofTrueTypeFont mainFont;
 		ofTrueTypeFont menuFont;
 		glm::vec2 Game::getPos(float angle);
-		int startNumber = 5;
+		int startNumber = 30;
 		float minTargetDist = 175.0; //minimum distance for the next targets location from the last one.
 		float startMinTargetDist = minTargetDist;
 		ofColor backgroundColor = ofColor(0, 0, 0);

@@ -11,13 +11,15 @@
 void Game::draw() {
     l.draw();
     line.draw();
-    target.draw();
-    ofColor(255, 255, 255);
-    std::string string = to_string(startNumber - score);
-    mainFont.drawString(string, l.pos.x - (mainFont.stringWidth(string) / 2), l.pos.y + (mainFont.stringHeight(string) / 2));
     if (isExploding) {
         explodingTarget.draw();
     }
+    target.draw();\
+    //draw middle number
+    ofColor(255, 255, 255);
+    std::string string = to_string(startNumber - score);
+    mainFont.drawString(string, l.pos.x - (mainFont.stringWidth(string) / 2), l.pos.y + (mainFont.stringHeight(string) / 2));
+
 }
 
 /**
@@ -78,21 +80,27 @@ void Game::update() {
         std::cout << " MISS ";
         if (!missSound.getIsPlaying()) {
             missSound.play();
+            gameState = endMenu;
         }
     }
 
-    // Update explosion if in exploding state
+    // Update explosion if isExploding is true
     if (isExploding) {
         explodingTarget.updateExplosion();
-        // Optionally, end the explosion effect when max distance is reached
+        // end the explosion effect when max distance is reached
         if (explodingTarget.explosionDistances[0] >= explodingTarget.maxDistance) {
             isExploding = false;
         }
     }
 
     // Play background music if not already playing
-    if (!backgroundMusic.getIsPlaying()) {
+    if (!backgroundMusic.getIsPlaying() && gameState == running) {
         backgroundMusic.play();
+    }
+
+    if (score == startNumber) {
+        menuMessage = "You won!";
+        gameState = endMenu;
     }
 }
 
@@ -201,13 +209,14 @@ void Game::restart() {
  * @param mousePressed True if the mouse is clicked.
  * @param text The title text to display on the menu.
  */
-void Game::menu(bool mousePressed, std::string text) {
+void Game::menu(bool mousePressed) {
     ofBackground(backgroundColor);
     Button button = Button(glm::vec2{ ofGetWindowWidth() / 2, ofGetWindowHeight() / 2 }, ofGetWindowWidth() / 2, ofGetWindowHeight() / 4, ofColor(255, 255, 255));
     button.draw("Start Game", menuFont);
     if (button.onButton(glm::vec2(ofGetMouseX(), ofGetMouseY())) && mousePressed) {
         gameState = running;
+        score = 0;
     }
     ofSetColor(255, 255, 255);
-    mainFont.drawString(text, ofGetWindowWidth() / 2 - (mainFont.stringWidth(text) / 2), ofGetWindowHeight() / 6);
+    mainFont.drawString(menuMessage, ofGetWindowWidth() / 2 - (mainFont.stringWidth(menuMessage) / 2), ofGetWindowHeight() / 6);
 }

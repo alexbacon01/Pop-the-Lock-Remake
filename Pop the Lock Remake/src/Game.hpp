@@ -18,7 +18,7 @@ class Game {
 		ofTrueTypeFont mainFont;
 		ofTrueTypeFont menuFont;
 		glm::vec2 Game::getPos(float angle);
-		int startNumber = 50;
+		int startNumber = 5;
 		float minTargetDist; //minimum distance for the next targets location from the last one.
 		ofColor backgroundColor = ofColor(0, 0, 0);
 		Target explodingTarget = target;
@@ -31,10 +31,12 @@ class Game {
 		bool stopLine();
 		float getNewTargetAngle(float last);
 		void restart();
-		void menu(bool mousePressed,std::string text);
+		void menu(bool mousePressed);
 		int score;
 		bool keyPressed;
 		game_state gameState = startMenu;
 		ofSoundPlayer missSound;
 		ofSoundPlayer backgroundMusic;
+
+		std::string menuMessage = "Pop the Lock";
 };

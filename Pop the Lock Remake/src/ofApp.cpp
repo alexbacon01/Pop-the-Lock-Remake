@@ -34,8 +34,11 @@ void ofApp::draw() {
     if (game.gameState == running) {
         game.draw();
     }
+    else if(game.gameState == startMenu){
+        game.menu(isMousePressed);
+    }
     else {
-        game.menu(isMousePressed, "Pop the Lock");
+        game.menu(isMousePressed);
     }
 }
 
@@ -54,6 +57,7 @@ void ofApp::keyPressed(int key) {
                 game.missSound.play();
             }
             game.gameState = endMenu;
+            game.menuMessage = "You Lost!";
             game.score = 0;
         }
     }

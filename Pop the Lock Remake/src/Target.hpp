@@ -17,7 +17,6 @@ public:
 	void setup();
 	bool checkForHit(Line line);
 
-	bool checkForMiss(Line line);
 
 	void startExplosion();
 

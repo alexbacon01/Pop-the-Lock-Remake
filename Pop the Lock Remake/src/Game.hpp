@@ -9,7 +9,6 @@ class Game {
 	private:
 		Lock l = Lock(glm::vec2{ 1,1 }, 0.5, ofColor(0, 0, 0), ofColor(0, 0, 0), 10);
 		Line line = Line(glm::vec2{ 1,1 }, ofColor(240, 55, 20), 10.0, 10.0, 10.0, 0);
-		Target target = Target(glm::vec2{ 1,1 }, 50, ofColor(225, 205, 9), 10);
 		float diam;
 		glm::vec2 pos;
 		float lineAngle = 90;
@@ -24,6 +23,7 @@ class Game {
 		ofColor backgroundColor = ofColor(0, 0, 0);
 		Target explodingTarget = target;
 		bool isExploding = false;
+		bool onTarget = false;
 
 	public:
 		void draw();
@@ -38,6 +38,6 @@ class Game {
 		game_state gameState = startMenu;
 		ofSoundPlayer missSound;
 		ofSoundPlayer backgroundMusic;
-
+		Target target = Target(glm::vec2{ 1,1 }, 50, ofColor(225, 205, 9), 10);
 		std::string menuMessage = "Pop the Lock";
 };

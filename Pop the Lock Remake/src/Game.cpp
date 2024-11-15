@@ -74,12 +74,12 @@ void Game::update() {
     target.pos = getPos(targetAngle);
 
     // Check if the line missed the target
-    if (target.checkForMiss(line)) {
-        if (!missSound.getIsPlaying()) {
-            missSound.play();
-            gameState = endMenu;
-        }
-    }
+   // if (target.checkForMiss(line)) {
+    //    if (!missSound.getIsPlaying()) {
+     //       missSound.play();
+     //       gameState = endMenu;
+     //   }
+  //  }
 
     // Update explosion if isExploding is true
     if (isExploding) {
@@ -87,6 +87,8 @@ void Game::update() {
         // end the explosion effect when max distance is reached
         if (explodingTarget.explosionDistances[0] >= explodingTarget.maxDistance) {
             isExploding = false;
+            target.isHit = false;
+            onTarget = false;
         }
     }
 
@@ -99,6 +101,24 @@ void Game::update() {
         menuMessage = "You won!";
         gameState = endMenu;
     }
+
+    if (target.checkForHit(line)) {
+        onTarget = true;
+    }
+    
+
+    if (onTarget && !target.isHit && !target.checkForHit(line)) {
+        if (!missSound.getIsPlaying()) {
+        missSound.play();
+        gameState = endMenu;
+        std::cout << "MISSED";
+        onTarget = false;
+        }
+    }
+
+    std::cout << "Target is hit " << target.isHit;
+
+
 }
 
 /**
@@ -117,6 +137,7 @@ bool Game::stopLine() {
         explodingTarget.isHit = true;
         explodingTarget.startExplosion();
         isExploding = true;
+        target.isHit = true;
         score++;
         minTargetDist -= 2;
         targetAngle = getNewTargetAngle(targetAngle);
@@ -203,6 +224,7 @@ float Game::getNewTargetAngle(float last) {
             newAngle = fmod(last - minTargetDist - 45 + 360, 360);
         }
     }
+
     return newAngle;
 }
 
@@ -218,6 +240,7 @@ void Game::restart() {
     line.speed = line.startSpeed; 
     minTargetDist = startMinTargetDist;
     menuMessage = "You Lost!";
+    target.isHit = false;
 }
 
 /**

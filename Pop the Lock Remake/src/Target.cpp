@@ -95,80 +95,6 @@ bool Target::checkForHit(Line line) {
     return angleDiff <= tolerance;
 }
 
-/**
- * @brief Checks if the line missed the target while passing near it.
- *
- * This function calculates the line's proximity to the target and detects if the line
- * has passed the target based on their angles relative to the center of the circle.
- *
- * @param line The Line object to check for a miss.
- * @return bool True if the line passed near but missed the target; otherwise, false.
- */
-bool Target::checkForMiss(Line line) {
-    // Get the center of rotation (game window center)
-    glm::vec2 center = glm::vec2(ofGetWidth() / 2, ofGetHeight() / 2);
-
-    // Get the current line angle (0 to 2PI)
-    float lineAngle = fmod(abs(line.angle) + TWO_PI, TWO_PI);
-
-    // Calculate target angle relative to center (0 to 2PI)
-    float targetAngle = atan2(pos.y - center.y, pos.x - center.x);
-    if (targetAngle < 0) targetAngle += TWO_PI;
-
-    // Store the previous line angle
-    static float prevLineAngle = lineAngle;
-
-    // Define the miss detection zone (slightly larger than hit tolerance)
-    float missZone = PI / 10.0f; // 18 degrees
-    float hitZone = PI / 12.0f;  // 15 degrees (same as hit tolerance)
-
-    // Calculate angular differences
-    float angleDiff = abs(lineAngle - targetAngle);
-    if (angleDiff > PI) {
-        angleDiff = TWO_PI - angleDiff;
-    }
-
-    // Determine if we just passed the target
-    bool passedTarget = false;
-    if (line.speed > 0) { // Clockwise rotation
-        float passAngle = targetAngle + hitZone; // Check if we've passed beyond the hit zone
-        if (passAngle >= TWO_PI) passAngle -= TWO_PI;
-
-        // Check if we crossed over the target angle + hit zone
-        if (prevLineAngle < passAngle && lineAngle > passAngle) {
-            passedTarget = true;
-        }
-        // Handle wrap-around at 2PI
-        if (prevLineAngle > lineAngle && abs(prevLineAngle - lineAngle) > PI) {
-            if (passAngle > min(prevLineAngle, lineAngle) &&
-                passAngle < max(prevLineAngle, lineAngle)) {
-                passedTarget = true;
-            }
-        }
-    }
-    else { // Counter-clockwise rotation
-        float passAngle = targetAngle - hitZone; // Check if we've passed beyond the hit zone
-        if (passAngle < 0) passAngle += TWO_PI;
-
-        // Check if we crossed over the target angle - hit zone
-        if (prevLineAngle > passAngle && lineAngle < passAngle) {
-            passedTarget = true;
-        }
-        // Handle wrap-around at 0
-        if (lineAngle > prevLineAngle && abs(lineAngle - prevLineAngle) > PI) {
-            if (passAngle > min(prevLineAngle, lineAngle) &&
-                passAngle < max(prevLineAngle, lineAngle)) {
-                passedTarget = true;
-            }
-        }
-    }
-
-    // Update previous angle for next frame
-    prevLineAngle = lineAngle;
-
-    // Return true if we passed the target and were within the miss zone
-    return passedTarget && (angleDiff <= missZone);
-}
 
 /**
  * @brief Starts the explosion effect by initializing directions and distances for explosion lines.
@@ -188,7 +114,7 @@ void Target::startExplosion() {
     }
     int soundIndex = ofRandom(0, sounds.size());
     sounds[soundIndex].play();
-    isHit = true;
+    //isHit = true;
 }
 
 /**

@@ -53,6 +53,7 @@ void ofApp::keyPressed(int key) {
     game.keyPressed = true;
     if (game.gameState == running && key == 32) { // space bar
         if (!game.stopLine()) {
+            std::cout << "stopped wrong";
             if (!game.missSound.getIsPlaying()) {
                 game.missSound.play();
             }

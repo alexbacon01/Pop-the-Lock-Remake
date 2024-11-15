@@ -16,6 +16,7 @@ public:
 	void draw();
 	float rotate();
 	float speed = 0.02;
+	float startSpeed = 0.02;
 	void reverse();
 
 };

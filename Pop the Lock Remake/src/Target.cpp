@@ -119,7 +119,8 @@ bool Target::checkForMiss(Line line) {
     static float prevLineAngle = lineAngle;
 
     // Define the miss detection zone (slightly larger than hit tolerance)
-    float missZone = PI / 10.0f; // 18 degrees, adjust as needed
+    float missZone = PI / 10.0f; // 18 degrees
+    float hitZone = PI / 12.0f;  // 15 degrees (same as hit tolerance)
 
     // Calculate angular differences
     float angleDiff = abs(lineAngle - targetAngle);
@@ -130,39 +131,42 @@ bool Target::checkForMiss(Line line) {
     // Determine if we just passed the target
     bool passedTarget = false;
     if (line.speed > 0) { // Clockwise rotation
-        float prevAngleDiff = targetAngle - prevLineAngle;
-        float currAngleDiff = targetAngle - lineAngle;
+        float passAngle = targetAngle + hitZone; // Check if we've passed beyond the hit zone
+        if (passAngle >= TWO_PI) passAngle -= TWO_PI;
 
-        if (prevAngleDiff < 0) prevAngleDiff += TWO_PI;
-        if (currAngleDiff < 0) currAngleDiff += TWO_PI;
-
-        // Check if we crossed over the target angle
-        if (prevAngleDiff < PI && currAngleDiff > PI) {
+        // Check if we crossed over the target angle + hit zone
+        if (prevLineAngle < passAngle && lineAngle > passAngle) {
             passedTarget = true;
         }
         // Handle wrap-around at 2PI
         if (prevLineAngle > lineAngle && abs(prevLineAngle - lineAngle) > PI) {
-            if (targetAngle > min(prevLineAngle, lineAngle) &&
-                targetAngle < max(prevLineAngle, lineAngle)) {
+            if (passAngle > min(prevLineAngle, lineAngle) &&
+                passAngle < max(prevLineAngle, lineAngle)) {
                 passedTarget = true;
             }
         }
     }
     else { // Counter-clockwise rotation
-        // Check if we crossed over the target angle
-        if (prevLineAngle > targetAngle && lineAngle < targetAngle) {
+        float passAngle = targetAngle - hitZone; // Check if we've passed beyond the hit zone
+        if (passAngle < 0) passAngle += TWO_PI;
+
+        // Check if we crossed over the target angle - hit zone
+        if (prevLineAngle > passAngle && lineAngle < passAngle) {
             passedTarget = true;
         }
         // Handle wrap-around at 0
-        if (prevLineAngle < missZone && lineAngle >(TWO_PI - missZone)) {
-            passedTarget = true;
+        if (lineAngle > prevLineAngle && abs(lineAngle - prevLineAngle) > PI) {
+            if (passAngle > min(prevLineAngle, lineAngle) &&
+                passAngle < max(prevLineAngle, lineAngle)) {
+                passedTarget = true;
+            }
         }
     }
 
     // Update previous angle for next frame
     prevLineAngle = lineAngle;
 
-    // Return true if we passed the target and were close enough to it
+    // Return true if we passed the target and were within the miss zone
     return passedTarget && (angleDiff <= missZone);
 }
 

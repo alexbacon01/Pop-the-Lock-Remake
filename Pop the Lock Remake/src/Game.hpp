@@ -19,7 +19,8 @@ class Game {
 		ofTrueTypeFont menuFont;
 		glm::vec2 Game::getPos(float angle);
 		int startNumber = 5;
-		float minTargetDist; //minimum distance for the next targets location from the last one.
+		float minTargetDist = 175.0; //minimum distance for the next targets location from the last one.
+		float startMinTargetDist = minTargetDist;
 		ofColor backgroundColor = ofColor(0, 0, 0);
 		Target explodingTarget = target;
 		bool isExploding = false;

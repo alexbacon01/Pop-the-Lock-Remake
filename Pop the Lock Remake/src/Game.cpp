@@ -53,8 +53,6 @@ void Game::setup() {
     line.height = diam / 10;
     line.roundness = 20;
 
-    // Set up the target
-    minTargetDist = 175;
     target.setup();
 
     // Load audio resources
@@ -77,7 +75,6 @@ void Game::update() {
 
     // Check if the line missed the target
     if (target.checkForMiss(line)) {
-        std::cout << " MISS ";
         if (!missSound.getIsPlaying()) {
             missSound.play();
             gameState = endMenu;
@@ -121,6 +118,7 @@ bool Game::stopLine() {
         explodingTarget.startExplosion();
         isExploding = true;
         score++;
+        minTargetDist -= 2;
         targetAngle = getNewTargetAngle(targetAngle);
         line.reverse();
     }
@@ -154,49 +152,72 @@ glm::vec2 Game::getPos(float angle) {
  * @return float The new target angle.
  */
 float Game::getNewTargetAngle(float last) {
-    float newAngle;
-    bool validAngle = false;
-    int maxAttempts = 100;
+    // Normalize last angle to [0, 360)
+    last = fmod(last + 360, 360);
+
     bool isClockwise = line.speed < 0;
+    float minAngle, maxAngle;
 
-    for (int i = 0; i < maxAttempts; i++) {
-        // Generate a random angle between 0 and 360 degrees
-        newAngle = ofRandom(0, 360);
+    // Define valid angle range based on direction and minimum distance
+    if (isClockwise) {
+        minAngle = fmod(last + minTargetDist, 360);
+        maxAngle = fmod(last + 360 - minTargetDist, 360);
+    }
+    else {
+        minAngle = fmod(last - 360 + minTargetDist, 360);
+        maxAngle = fmod(last - minTargetDist, 360);
+    }
 
-        // Calculate angle difference, accounting for wrap-around at 360
-        float angleDifference = newAngle - last;
+    float newAngle = last;  // Initialize to last angle
+
+        // Generate random angle, avoiding the excluded zone
         if (isClockwise) {
-            if (angleDifference < 0) angleDifference += 360;
+            // Generate angle in the allowed range after the current position
+            newAngle = ofRandom(minAngle, minAngle + (360 - 2 * minTargetDist));
+            newAngle = fmod(newAngle + 360, 360);
         }
         else {
-            if (angleDifference > 0) angleDifference -= 360;
+            // Generate angle in the allowed range before the current position
+            newAngle = ofRandom(maxAngle - (360 - 2 * minTargetDist), maxAngle);
+            newAngle = fmod(newAngle + 360, 360);
         }
-        angleDifference = abs(angleDifference);
 
-        // Check if angleDifference meets the minimum distance
-        if (angleDifference >= minTargetDist) {
-            validAngle = true;
-            break;
+        // Verify the distance
+        float angleDiff = abs(newAngle - last);
+        if (angleDiff > 180) {
+            angleDiff = 360 - angleDiff;
         }
+
+    // Double-check final distance
+    float finalDiff = abs(newAngle - last);
+    if (finalDiff > 180) {
+        finalDiff = 360 - finalDiff;
     }
 
-    // Fallback if no valid angle found
-    if (!validAngle) {
-        newAngle = fmod(last + (isClockwise ? minTargetDist : -minTargetDist), 360);
+    // If still too close, force minimum separation
+    if (finalDiff < minTargetDist) {
+        if (isClockwise) {
+            newAngle = fmod(last + minTargetDist + 45, 360);
+        }
+        else {
+            newAngle = fmod(last - minTargetDist - 45 + 360, 360);
+        }
     }
-
-    std::cout << "Last Angle: " << last << " New Angle: " << newAngle << " Direction: " << (isClockwise ? "Clockwise" : "Counterclockwise") << std::endl;
     return newAngle;
 }
 
 /**
  * @brief Resets the game score to zero.
  *
- * This function resets the score counter to zero, effectively restarting
+ * This function resets the score counter to zero, line speed and target distance to start values, and menu message to default lost. effectively restarting
  * the game progress.
  */
 void Game::restart() {
+    gameState = running;
     score = 0;
+    line.speed = line.startSpeed; \
+    minTargetDist = startMinTargetDist;
+    menuMessage = "You Lost!";
 }
 
 /**
@@ -214,8 +235,7 @@ void Game::menu(bool mousePressed) {
     Button button = Button(glm::vec2{ ofGetWindowWidth() / 2, ofGetWindowHeight() / 2 }, ofGetWindowWidth() / 2, ofGetWindowHeight() / 4, ofColor(255, 255, 255));
     button.draw("Start Game", menuFont);
     if (button.onButton(glm::vec2(ofGetMouseX(), ofGetMouseY())) && mousePressed) {
-        gameState = running;
-        score = 0;
+        restart();
     }
     ofSetColor(255, 255, 255);
     mainFont.drawString(menuMessage, ofGetWindowWidth() / 2 - (mainFont.stringWidth(menuMessage) / 2), ofGetWindowHeight() / 6);
